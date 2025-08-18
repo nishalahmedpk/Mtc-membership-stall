@@ -1,0 +1,107 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  background: #222;
+  color: #eee;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+#game {
+  margin: 20px auto;
+  width: 480px;
+  display: grid;
+  grid-template-columns: repeat(3, 140px);
+  grid-template-rows: repeat(2, 140px);
+  gap: 20px;
+  justify-content: center;
+}
+
+.color-button {
+  border-radius: 15px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 0 10px #000;
+  user-select: none;
+  height: 140px;
+  width: 140px;
+}
+
+.color-button:active {
+  transform: scale(0.9);
+}
+
+/* Base colors */
+#green {
+  background-color: #2ecc40;
+}
+#red {
+  background-color: #ff4136;
+}
+#yellow {
+  background-color: #ffdc00;
+}
+#blue {
+  background-color: #0074d9;
+}
+
+/* Extra colors */
+#purple {
+  background-color: #b10dc9;
+}
+
+#orange {
+  background-color: #ff851b;
+}
+
+/* Highlight effect */
+.color-button.active {
+  opacity: 1;
+  box-shadow: 0 0 30px white;
+}
+
+#message {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  height: 30px;
+}
+
+#start-btn {
+  margin-top: 30px;
+  font-size: 1.2rem;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 10px;
+  background-color: #0074d9;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s;
+}
+
+#start-btn:hover {
+  background-color: #005fa3;
+}
+#bonus-btn {
+  font-size: 1rem;
+  box-shadow: 0 0 15px #ffd700;
+  transition: transform 0.3s ease;
+}
+
+#bonus-btn:hover {
+  transform: scale(1.2);
+  background-color: #ffec4d;
+}
+
+#level-display {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  color: #ffd700;
+}

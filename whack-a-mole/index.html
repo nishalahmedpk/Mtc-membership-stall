@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Whack-a-mole Game</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Whack-a-mole!</h1>
+    <h2>Score: <span class="score">0</span></h2>
+    <p class="instructions">Click the moles to score points — reach 9 points to win!</p>
+    <button id="start" onClick="startGame()">Start</button>
+    <div class="game">
+      <div class="hole hole1">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole2">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole3">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole4">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole5">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole6">
+        <div class="mole"></div>
+      </div>
+    </div>
+    <div id="congratsModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <h2>Congratulations!</h2>
+        <p>You reached 9 points!</p>
+        <button id="playAgain">Play Again</button>
+      </div>
+    </div>
+
+    <script src="script.js">
+      function postSize() {
+        const width = document.documentElement.scrollWidth;
+        const height = document.documentElement.scrollHeight;
+
+        window.parent.postMessage({
+          type: "resize-iframe",
+          width: width,
+          height: height
+        }, "*");
+      }
+
+      window.addEventListener("load", postSize);
+      window.addEventListener("resize", postSize);
+    </script>
+  </body>
+</html>

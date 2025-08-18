@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../../../../Agent"
+		},
+		{
+			"path": "../../../Chatbot-frontend"
+		},
+		{
+			"path": "../../../../prac"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {}
+}

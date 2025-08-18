@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tech Club Maze Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    html, body {
+      height: 100%;
+      background: #181818;
+      color: #E0E0E0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1rem 1.5rem;
+      /* Allow scrolling if needed */
+      /* overflow: auto; */
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #3AAFA9;
+      text-shadow: 0 0 10px #3AAFA9aa;
+      margin-bottom: 0.5rem;
+      user-select: none;
+    }
+
+    /* Progress Bar */
+    .progress-tracker {
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #3AAFA9aa;
+      background: #2E2E2E;
+      height: 24px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background-color: #3AAFA9;
+      width: 0%;
+      transition: width 0.3s ease-in-out;
+      box-shadow: 0 0 10px #3AAFA9bb;
+    }
+
+    /* Main container */
+    .container {
+      display: flex;
+      width: 100%;
+      max-width: 1400px;
+      gap: 2rem;
+      flex: 1;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 0;
+    }
+
+    /* Maze section */
+    .maze-section {
+      flex: 1 1 650px;
+      background: #222222;
+      border-radius: 12px;
+      padding: 1rem 1.5rem 1.5rem;
+      box-shadow: 0 0 20px #3AAFA9aa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+      max-height: 100vh;
+    }
+
+    #maze {
+      width: 100%;
+      max-width: 600px;
+      aspect-ratio: 1 / 1;
+      border: 2px solid #3AAFA9;
+      border-radius: 10px;
+      margin-top: 0.8rem;
+      background: #101010;
+      box-shadow: 0 0 8px #3AAFA9bb;
+      flex-shrink: 0;
+    }
+
+    /* Generate button moved to right panel */
+    .generate-btn {
+      background: #3AAFA9;
+      color: #121212;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background-color 0.25s ease;
+      box-shadow: 0 0 10px #3AAFA9cc;
+      user-select: none;
+      align-self: center;
+    }
+    .generate-btn:hover {
+      background: #2a8b85;
+      box-shadow: 0 0 18px #2a8b85cc;
+    }
+
+    .solve-btn-wrapper {
+      margin-top: 1rem;
+      align-self: center;
+    }
+    .solve-btn-wrapper button {
+      padding: 0.7rem 1.4rem;
+      font-weight: 600;
+      border-radius: 10px;
+      border: none;
+      background: #3AAFA9;
+      color: #121212;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 0 10px #3AAFA9cc;
+      user-select: none;
+      transition: background-color 0.25s ease;
+    }
+    .solve-btn-wrapper button:hover {
+      background: #2a8b85;
+      box-shadow: 0 0 18px #2a8b85cc;
+    }
+
+    /* Right panel: timer + mini games + generate */
+    .right-panel {
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      user-select: none;
+    }
+
+    #timer {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #3AAFA9;
+      border: 2px solid #3AAFA9;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 15px #3AAFA9aa;
+    }
+
+    .generate-btn-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .game-panel {
+      background: #222222;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 0 20px #3AAFA9aa;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .game-panel h3 {
+      color: #3AAFA9;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      user-select: none;
+    }
+
+    .game-panel button {
+      background: #3AAFA9;
+      color: #121212;
+      border: none;
+      padding: 0.8rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      box-shadow: 0 0 10px #3AAFA9cc;
+      user-select: none;
+    }
+    .game-panel button:hover {
+      background: #2a8b85;
+      box-shadow: 0 0 18px #2a8b85cc;
+    }
+
+    .reset-btn {
+      background: #d9534f !important;
+      color: white;
+      user-select: none;
+      box-shadow: 0 0 12px #d9534f;
+      font-weight: 700;
+    }
+    .reset-btn:hover {
+      background: #c9302c !important;
+      box-shadow: 0 0 20px #c9302c;
+    }
+
+    /* Popups */
+    #game-modal, #unlock-popup, #win-popup, #fail-popup {
+      font-family: 'Poppins', sans-serif;
+      z-index: 2000;
+    }
+    #game-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #game-frame {
+      width: 1280px;
+      height: 720px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 30px #3AAFA9;
+    }
+    .hidden {
+      display: none !important;
+    }
+    #unlock-popup {
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #3AAFA9;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #3AAFA9;
+      z-index: 2000;
+      text-align: center;
+      user-select: none;
+    }
+    #unlock-popup button {
+      margin-top: 1rem;
+      padding: 0.6rem 1rem;
+      background: #3AAFA9;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #121212;
+      user-select: none;
+    }
+    .popup {
+      display: none;
+      place-items: center;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 2001;
+    }
+    .popup .popup-content {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      max-width: 320px;
+      color: #e0e0e0;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+      animation: fadeIn 0.3s ease-in-out;
+      user-select: none;
+    }
+    #win-popup h2, #fail-popup h2 {
+      user-select: none;
+    }
+    #win-popup button, #fail-popup button {
+      margin-top: 20px;
+      background-color: #3AAFA9;
+      color: #121212;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.2s ease;
+      user-select: none;
+    }
+    #win-popup button:hover, #fail-popup button:hover {
+      background-color: #2a8b85;
+    }
+
+    /* Responsive */
+    @media (max-width: 950px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .maze-section {
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 1rem;
+      }
+      .right-panel {
+        width: 100%;
+        max-width: 600px;
+      }
+      #maze {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body onload="restoreGameStatus()">
+
+  <h1>🧠 MTC Maze Challenge</h1>
+
+  <div class="progress-tracker" aria-label="Progress Bar">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <div class="container">
+
+    <div class="maze-section">
+      <canvas id="maze" width="600" height="600"></canvas>
+      <!-- <div class="solve-btn-wrapper">
+        <button onclick="initSolve()">Solve Maze</button>
+      </div> -->
+    </div>
+
+    <div class="right-panel">
+      <div id="timer">Time: 0s</div>
+
+      <div class="generate-btn-wrapper">
+        <button class="generate-btn" onclick="initMaze()">Generate Maze</button>
+      </div>
+
+      <div class="game-panel" aria-label="Mini Games">
+        <h3>🎮 Mini Games</h3>
+        <div><span id="card-tick" class="tick hidden">✅</span><button onclick="launchGame('card')">Play Card Matching</button></div>
+        <div><span id="bullseye-tick" class="tick hidden">✅</span><button onclick="launchGame('bullseye')">Play Bullseye</button></div>
+        <div><span id="mole-tick" class="tick hidden">✅</span><button onclick="launchGame('mole')">Play Whack-a-Mole</button></div>
+        <div><span id="flappy-tick" class="tick hidden">✅</span><button onclick="launchGame('flappy')">Play Flappy Bird</button></div>
+        <div><span id="memory-tick" class="tick hidden">✅</span><button onclick="launchGame('memory')">Play Memory Sequence</button></div>
+        <button onclick="localStorage.clear(); location.reload();" class="reset-btn">🔄 Reset Progress</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Game Modal -->
+  <div id="game-modal" class="hidden">
+    <iframe id="game-frame" src="" frameborder="0" scrolling="no"></iframe>
+  </div>
+
+  <!-- Unlock Popup -->
+  <div id="unlock-popup" class="hidden">
+    <p>✅ All games completed! Maze path unlocked!</p>
+    <button onclick="closeUnlockPopup()">OK</button>
+  </div>
+
+  <!-- Win Popup -->
+  <div id="win-popup" class="popup">
+    <div class="popup-content">
+      <h2>🎉 Congratulations!</h2>
+      <p>You completed the maze in <span id="time-taken">0</span> seconds!</p>
+      <button onclick="onWinPopupClose()">OK</button>
+    </div>
+  </div>
+
+  <!-- Fail Popup -->
+  <div id="fail-popup" class="popup">
+    <div class="popup-content" style="border: 2px solid #d9534f;">
+      <h2 style="color: #d9534f;">⏱ Time’s Up!</h2>
+      <p>You took more than 70 seconds to complete the maze.</p>
+      <button onclick="onFailPopupClose()">OK</button>
+    </div>
+  </div>
+
+  <!-- Maze Scripts -->
+  <script src="maze/globals.js"></script>
+  <script src="maze/utils.js"></script>
+  <script src="maze/entries.js"></script>
+  <script src="maze/maze.js"></script>
+  <script src="maze/solver.js"></script>
+  <script src="maze/app.js"></script>
+  <script src="main.js"></script>
+
+</body>
+</html>
