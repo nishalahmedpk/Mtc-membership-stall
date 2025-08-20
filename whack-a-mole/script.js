@@ -62,7 +62,7 @@ function bonk(e) {
   this.classList.remove('up');
   scoreBoard.textContent = score;
 
-  if (score === 8) {
+  if (score === 8) {// to change the target score
     timeUp = true;            // stop game early
     button.innerHTML = 'Try again?';
     button.style.visibility = 'visible';

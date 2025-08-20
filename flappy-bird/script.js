@@ -10,8 +10,8 @@ var bottom_bar_offset = 0;
 var pipes = [];
 var score=0;
 var targetScore = 3; // set your winning score here
-var min_gap = 100;   // never go smaller than this
-var max_gap = 160;  
+var min_gap = 200;   // never go smaller than this
+var max_gap = 360;  // max limit for gap size
 
 function MySprite(img_url) {
   this.x = 0;

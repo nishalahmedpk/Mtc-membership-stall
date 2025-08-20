@@ -70,7 +70,7 @@ function swapColors() {
 async function playSequence() {
   acceptingInput = false;
 
-  if (level > 5) {
+  if (level > 3) { // set target score
     // Show congrats UI and end game
     showCongrats();
     return;
@@ -79,7 +79,7 @@ async function playSequence() {
   message.textContent = `Level ${level} - ${levelNames[level]}: Watch the sequence`;
 
 
-  if (level >= 3) swapColors();
+  if (level >= 2) swapColors(); // for the swaping of colors to begin
 
   // Progressive opacity fade
   const fadeAmount = Math.min(0.6, 1 - level * 0.05);
