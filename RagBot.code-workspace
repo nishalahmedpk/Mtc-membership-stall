@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../RagBot"
+		},
+		{
+			"path": "../../../Agent"
+		},
+		{
+			"path": "../../Project- Deep Research with LangGraph"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
