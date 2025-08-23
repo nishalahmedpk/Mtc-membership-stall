@@ -6,11 +6,11 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ===== Game List =====
 const allGames = [
-  { id: 'bullseye', label: 'Play Bullseye', path: '/bullseye/index.html', doneKey: 'bullseyeDone' },
-  { id: 'card', label: 'Play Card Matching', path: '/card-matching/index.html', doneKey: 'cardsDone' },
-  { id: 'mole', label: 'Play Whack-a-Mole', path: '/whack-a-mole/index.html', doneKey: 'moleDone' },
-  { id: 'flappy', label: 'Play Flappy Bird', path: '/flappy-bird/index.html', doneKey: 'flappyDone' },
-  { id: 'memory', label: 'Play Memory Sequence', path: '/memory-sequence/index.html', doneKey: 'memoryDone' }
+  { id: 'bullseye', label: 'Play Bullseye', path: './bullseye/index.html', doneKey: 'bullseyeDone' },
+  { id: 'card', label: 'Play Card Matching', path: './card-matching/index.html', doneKey: 'cardsDone' },
+  { id: 'mole', label: 'Play Whack-a-Mole', path: './whack-a-mole/index.html', doneKey: 'moleDone' },
+  { id: 'flappy', label: 'Play Flappy Bird', path: './flappy-bird/index.html', doneKey: 'flappyDone' },
+  { id: 'memory', label: 'Play Memory Sequence', path: './memory-sequence/index.html', doneKey: 'memoryDone' }
 ];
 
 let selectedGames = [];
