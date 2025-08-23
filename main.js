@@ -65,7 +65,7 @@ function renderGamePanel() {
 
   panel.innerHTML = `${buttonsHtml}
     <div class="game-item">
-      <button onclick="localStorage.clear(); location.reload();" class="reset-btn">🔄 Reset Progress</button>
+      <button onclick="localStorage.clear(); location.reload();" class="reset-btn">🔄 Reset</button>
     </div>`;
 }
 
