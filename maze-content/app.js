@@ -27,8 +27,8 @@ function initMaze() {
     wallSize: 20,
     entryType: 'vertical',
     bias: '',
-    color: '#000000',
-    backgroundColor: '#FFFFFF',
+    backgroundcolor: '#000000',
+    Color: '#FFFFFF',
     solveColor: '#A52A2A',
     removeWalls: 0,
     maxMaze: maxMaze,
@@ -56,21 +56,27 @@ function initMaze() {
   startTime = Date.now();
   clearInterval(timerInterval);
   timerInterval = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const elapsedMs = Date.now() - startTime;
+    const elapsedSeconds = (elapsedMs / 1000).toFixed(1); // Show 1 decimal place during play
     const timerEl = document.getElementById("timer");
-    if (timerEl) timerEl.textContent = `Time: ${elapsed}s`;
+    if (timerEl) timerEl.textContent = `Time: ${elapsedSeconds}s`;
 
-    // Fail if more than 60 seconds
-    if (elapsed >= 70) { // to change the fail time, change this value
+    // Fail if more than 70 seconds
+    if (elapsedMs >= 70000) { // 70 seconds in milliseconds
       clearInterval(timerInterval);
       showFailPopup();
     }
-  }, 1000);
+  }, 100); // Update every 100ms for smoother display
 
   // Attach movement key handler once
   if (!keyHandlerAttached) {
     window.addEventListener('keydown', handleMovement);
     keyHandlerAttached = true;
+  }
+  
+  // Enable mini-games after maze generation
+  if (typeof enableGamesAfterMazeGeneration === 'function') {
+    enableGamesAfterMazeGeneration();
   }
 }
 
@@ -192,20 +198,23 @@ function handleMovement(e) {
 
     // Check win
     if (player.x === finish.x && player.y === finish.y) {
-      const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+      const timeTakenMs = Date.now() - startTime; // Time in milliseconds
+      const timeTakenSeconds = (timeTakenMs / 1000).toFixed(3); // Convert to seconds with 3 decimal places
       clearInterval(timerInterval);
-      setTimeout(() => showWinPopup(timeTaken), 100);
+      setTimeout(() => showWinPopup(timeTakenMs, timeTakenSeconds), 100);
     }
   }
 }
 
 // ===== Win Popup =====
-function showWinPopup(seconds) {
-  document.getElementById("time-taken").textContent = seconds;
+function showWinPopup(milliseconds, displaySeconds) {
+  document.getElementById("time-taken").textContent = displaySeconds;
+  document.getElementById("time-taken").dataset.milliseconds = milliseconds; // Store milliseconds for database
   document.getElementById("win-popup").style.display = "grid";
 }
 
 function onWinPopupClose() {
+  // This function is now handled in main.js
   document.getElementById("win-popup").style.display = "none";
   localStorage.clear();
   location.reload();

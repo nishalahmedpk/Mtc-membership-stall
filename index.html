@@ -3,109 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <title>Tech Club Maze Challenge</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <style>
     * {
       margin: 0; padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Press Start 2P', monospace;
     }
+    
     html, body {
-      height: 100%;
-      background: #181818;
-      color: #E0E0E0;
+      height: 100vh;
+      width: 100vw;
+      background: #000011;
+      color: #00ff41;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 1rem 1.5rem;
-      /* Allow scrolling if needed */
-      /* overflow: auto; */
+      padding: 1rem;
+      overflow: hidden;
+      position: relative;
     }
 
+
+
     h1 {
-      font-size: 2.5rem;
-      color: #3AAFA9;
-      text-shadow: 0 0 10px #3AAFA9aa;
-      margin-bottom: 0.5rem;
+      font-size: 2rem;
+      font-weight: 400;
+      color: #00ff41;
+      text-align: center;
+      margin-bottom: 1rem;
       user-select: none;
+      position: relative;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      padding-top: 3rem;
     }
+    
+    /* h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 2px;
+      background: #00ff41;
+    } */
 
     /* Progress Bar */
     .progress-tracker {
       width: 100%;
-      max-width: 700px;
-      margin-bottom: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #3AAFA9aa;
-      background: #2E2E2E;
-      height: 24px;
+      max-width: 600px;
+      margin-bottom: 1rem;
+      border: 2px solid #00ff41;
+      background: #000011;
+      height: 20px;
       overflow: hidden;
+      position: relative;
     }
+    
     .progress-fill {
       height: 100%;
-      background-color: #3AAFA9;
+      background: #00ff41;
       width: 0%;
-      transition: width 0.3s ease-in-out;
-      box-shadow: 0 0 10px #3AAFA9bb;
+      transition: width 0.5s ease-in-out;
+      position: relative;
     }
 
     /* Main container */
     .container {
       display: flex;
       width: 100%;
-      max-width: 1400px;
-      gap: 2rem;
+      max-width: 1200px;
+      gap: 1.5rem;
       flex: 1;
       justify-content: center;
-      align-items: flex-start;
-      min-height: 0;
+      align-items: stretch;
+      height: calc(100vh - 120px);
+      overflow: hidden;
     }
 
     /* Maze section */
     .maze-section {
-      flex: 1 1 650px;
-      background: #222222;
-      border-radius: 12px;
-      padding: 1rem 1.5rem 1.5rem;
-      box-shadow: 0 0 20px #3AAFA9aa;
+      flex: 1 1 60%;
+      background: #000011;
+      border: 3px solid #00ff41;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       user-select: none;
-      max-height: 100vh;
+      position: relative;
+      justify-content: space-between;
     }
 
     #maze {
       width: 100%;
-      max-width: 600px;
+      max-width: 500px;
       aspect-ratio: 1 / 1;
-      border: 2px solid #3AAFA9;
-      border-radius: 10px;
-      margin-top: 0.8rem;
-      background: #101010;
-      box-shadow: 0 0 8px #3AAFA9bb;
+      border: 2px solid #00ff41;
+      margin-top: 0.5rem;
+      background: #000000;
       flex-shrink: 0;
+      transition: all 0.3s ease;
     }
 
     /* Generate button moved to right panel */
     .generate-btn {
-      background: #3AAFA9;
-      color: #121212;
-      border: none;
-      padding: 0.8rem 1.6rem;
-      border-radius: 10px;
-      font-weight: 600;
+      background: #000011;
+      color: #00ff41;
+      border: 2px solid #00ff41;
+      padding: 0.8rem 1.5rem;
+      font-weight: 400;
       cursor: pointer;
-      font-size: 1.1rem;
-      transition: background-color 0.25s ease;
-      box-shadow: 0 0 10px #3AAFA9cc;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
       user-select: none;
-      align-self: center;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Press Start 2P', monospace;
     }
+    
     .generate-btn:hover {
-      background: #2a8b85;
-      box-shadow: 0 0 18px #2a8b85cc;
+      background: #00ff41;
+      color: #000011;
+    }
+    
+    .generate-btn:active {
+      transform: scale(0.95);
+      transition: transform 0.1s;
+    }
+    
+    .generate-btn:disabled {
+      background: #222 !important;
+      color: #666 !important;
+      border-color: #666 !important;
+      cursor: not-allowed !important;
+      transform: none !important;
+      opacity: 0.5 !important;
+    }
+    
+    .generate-btn:disabled:hover {
+      background: #222 !important;
+      color: #666 !important;
+      transform: none !important;
     }
 
     .solve-btn-wrapper {
@@ -132,226 +177,563 @@
 
     /* Right panel: timer + mini games + generate */
     .right-panel {
-      width: 320px;
+      width: 300px;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1rem;
       user-select: none;
+      height: 100%;
+      overflow-y: auto;
     }
 
     #timer {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #3AAFA9;
-      border: 2px solid #3AAFA9;
-      padding: 0.8rem 1.2rem;
-      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: 400;
+      background: #000011;
+      border: 2px solid #00ff41;
+      color: #00ff41;
+      padding: 0.8rem;
       text-align: center;
-      box-shadow: 0 0 15px #3AAFA9aa;
+      position: relative;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'VT323', monospace;
+      font-size: 1.5rem;
     }
 
     .generate-btn-wrapper {
       display: flex;
       justify-content: center;
-      margin-bottom: 1rem;
+      width: 100%;
+      padding-bottom: 3rem;
     }
 
     .game-panel {
-      background: #222222;
-      border-radius: 12px;
-      padding: 1rem 1.5rem;
-      box-shadow: 0 0 20px #3AAFA9aa;
+      background: #000011;
+      border: 2px solid #00ff41;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.8rem;
+      position: relative;
+      flex: 1;
+      overflow-y: auto;
+      height: 100%;
     }
+    
     .game-panel h3 {
-      color: #3AAFA9;
-      font-weight: 700;
-      font-size: 1.3rem;
+      color: #00ff41;
+      font-weight: 400;
+      font-size: 1rem;
       margin-bottom: 0.5rem;
+      text-align: center;
       user-select: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-family: 'Press Start 2P', monospace;
+      flex-shrink: 0;
     }
 
-    .game-panel button {
-      background: #3AAFA9;
-      color: #121212;
-      border: none;
-      padding: 0.8rem 1.4rem;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.25s ease;
-      box-shadow: 0 0 10px #3AAFA9cc;
-      user-select: none;
+    .game-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      gap: 0.5rem;
+      min-height: 60px;
     }
+    
+    .game-panel button {
+      background: #000011;
+      color: #00ff41;
+      border: 2px solid #00ff41;
+      padding: 1rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      font-size: 0.7rem;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
     .game-panel button:hover {
-      background: #2a8b85;
-      box-shadow: 0 0 18px #2a8b85cc;
+      background: #00ff41;
+      color: #000011;
+      transform: scale(1.02);
+    }
+    
+    .game-panel button:disabled {
+      background: #222 !important;
+      color: #666 !important;
+      border-color: #666 !important;
+      cursor: not-allowed !important;
+      transform: none !important;
+      opacity: 0.5;
+    }
+    
+    .game-panel button:disabled:hover {
+      background: #222 !important;
+      color: #666 !important;
+      transform: none !important;
     }
 
     .reset-btn {
-      background: #d9534f !important;
-      color: white;
+      background: #000011 !important;
+      color: #ff4444 !important;
+      border: 2px solid #ff4444 !important;
       user-select: none;
-      box-shadow: 0 0 12px #d9534f;
-      font-weight: 700;
+      font-weight: 400 !important;
+      font-family: 'Press Start 2P', monospace !important;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 1rem !important;
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: all 0.3s ease !important;
+      cursor: pointer !important;
+      font-size: 0.7rem !important;
     }
+    
     .reset-btn:hover {
-      background: #c9302c !important;
-      box-shadow: 0 0 20px #c9302c;
+      background: #ff4444 !important;
+      color: #000011 !important;
     }
 
     /* Popups */
     #game-modal, #unlock-popup, #win-popup, #fail-popup {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Press Start 2P', monospace;
       z-index: 2000;
     }
+    
     #game-modal {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .game-controls {
       display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 2001;
     }
+    
+    #exit-game-btn {
+      background: #000011;
+      color: #ff4444;
+      border: 2px solid #ff4444;
+      padding: 0.8rem 1.5rem;
+      font-size: 0.8rem;
+      font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    #exit-game-btn:hover {
+      background: #ff4444;
+      color: #000011;
+    }
+    
     #game-frame {
-      width: 1280px;
-      height: 720px;
-      border: none;
-      border-radius: 10px;
-      box-shadow: 0 0 30px #3AAFA9;
+      width: 90vw;
+      height: 80vh;
+      max-width: 1200px;
+      max-height: 700px;
+      border: 3px solid #00ff41;
+      background: #000011;
     }
+    
     .hidden {
       display: none !important;
     }
+    
     #unlock-popup {
       position: fixed;
       top: 20%;
       left: 50%;
       transform: translateX(-50%);
-      background: #222;
-      color: #3AAFA9;
+      background: #000011;
+      border: 2px solid #00ff41;
+      color: #00ff41;
       padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 20px #3AAFA9;
       z-index: 2000;
       text-align: center;
       user-select: none;
+      font-family: 'Press Start 2P', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
+    
     #unlock-popup button {
       margin-top: 1rem;
-      padding: 0.6rem 1rem;
-      background: #3AAFA9;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
+      padding: 0.8rem 1.5rem;
+      background: #000011;
+      border: 2px solid #00ff41;
+      color: #00ff41;
+      font-weight: 400;
       cursor: pointer;
-      color: #121212;
       user-select: none;
+      transition: all 0.3s ease;
+      font-family: 'Press Start 2P', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
+    
+    #unlock-popup button:hover {
+      background: #00ff41;
+      color: #000011;
+    }
+    
     .popup {
       display: none;
       place-items: center;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0, 0, 0, 0.9);
       z-index: 2001;
     }
+    
     .popup .popup-content {
-      background: #1e1e1e;
-      padding: 30px;
-      border-radius: 10px;
+      background: #000011;
+      border: 2px solid #00ff41;
+      padding: 2rem;
       text-align: center;
-      font-family: 'Poppins', sans-serif;
-      max-width: 320px;
-      color: #e0e0e0;
-      box-shadow: 0 0 20px rgba(0,0,0,0.7);
-      animation: fadeIn 0.3s ease-in-out;
+      font-family: 'Press Start 2P', monospace;
+      max-width: 400px;
+      color: #00ff41;
       user-select: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
+    
     #win-popup h2, #fail-popup h2 {
       user-select: none;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
     }
+    
+    #fail-popup .popup-content {
+      border-color: #ff4444;
+      color: #ff4444;
+    }
+    
+    #fail-popup h2 {
+      color: #ff4444;
+    }
+    
     #win-popup button, #fail-popup button {
-      margin-top: 20px;
-      background-color: #3AAFA9;
-      color: #121212;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
+      margin-top: 1.5rem;
+      background: #000011;
+      color: #00ff41;
+      border: 2px solid #00ff41;
+      padding: 0.8rem 2rem;
       cursor: pointer;
-      font-weight: 700;
-      transition: background-color 0.2s ease;
+      font-weight: 400;
+      transition: all 0.3s ease;
       user-select: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
     }
+    
+    #fail-popup button {
+      color: #ff4444;
+      border-color: #ff4444;
+    }
+    
     #win-popup button:hover, #fail-popup button:hover {
-      background-color: #2a8b85;
+      background: #00ff41;
+      color: #000011;
+    }
+    
+    #fail-popup button:hover {
+      background: #ff4444;
+      color: #000011;
+    }
+
+    /* ID Input Styles */
+    .id-input-section {
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      text-align: left;
+    }
+    
+    .id-input-section label {
+      font-size: 0.6rem;
+      color: #00ff41;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Press Start 2P', monospace;
+    }
+    
+    .id-input-section input {
+      background: #000011;
+      border: 2px solid #00ff41;
+      color: #00ff41;
+      padding: 0.8rem;
+      font-family: 'VT323', monospace;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+    
+    .id-input-section input:focus {
+      outline: none;
+      border-color: #00ff41;
+      box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+    }
+    
+    .id-input-section input::placeholder {
+      color: #006622;
+      font-family: 'VT323', monospace;
+    }
+    
+    .error-message {
+      color: #ff4444;
+      font-size: 0.5rem;
+      font-family: 'Press Start 2P', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+    
+    .error-message.hidden {
+      display: none;
     }
 
     /* Responsive */
-    @media (max-width: 950px) {
+    @media (max-width: 1200px) {
       .container {
         flex-direction: column;
         align-items: center;
         gap: 1rem;
+        height: calc(100vh - 100px);
       }
+      
       .maze-section {
         width: 100%;
         max-width: 600px;
-        margin-bottom: 1rem;
+        flex: 1;
       }
+      
       .right-panel {
         width: 100%;
         max-width: 600px;
+        height: auto;
+        max-height: 40vh;
       }
+      
       #maze {
-        max-width: 100%;
+        max-width: 90%;
       }
+    }
+    
+    @media (max-width: 768px) {
+      html, body {
+        padding: 0.5rem;
+        font-size: 12px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .container {
+        gap: 0.5rem;
+        height: calc(100vh - 80px);
+      }
+      
+      .maze-section, .right-panel {
+        padding: 0.8rem;
+      }
+      
+      .progress-tracker {
+        height: 15px;
+        margin-bottom: 0.5rem;
+      }
+      
+      .game-panel button {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.6rem;
+      }
+      
+      .generate-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.7rem;
+      }
+      
+      #timer {
+        font-size: 1.2rem;
+        padding: 0.6rem;
+      }
+      
+      .game-panel h3 {
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+      }
+      
+      .game-panel {
+        gap: 0.6rem;
+      }
+      
+      #game-frame {
+        width: 95vw;
+        height: 70vh;
+      }
+      
+      #exit-game-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.6rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+      }
+      
+      .container {
+        height: calc(100vh - 70px);
+      }
+      
+      .game-panel button {
+        font-size: 0.5rem;
+        padding: 0.5rem 0.6rem;
+      }
+      
+      .generate-btn {
+        font-size: 0.6rem;
+      }
+      
+      #timer {
+        font-size: 1rem;
+      }
+      
+      .tick {
+        font-size: 0.5rem;
+        padding: 0.1rem 0.3rem;
+      }
+      
+      .popup .popup-content {
+        max-width: 90vw;
+        padding: 1.5rem;
+        font-size: 0.7rem;
+      }
+      
+      #win-popup button, #fail-popup button {
+        font-size: 0.6rem;
+        padding: 0.6rem 1.5rem;
+      }
+    }
+    
+    /* Custom scrollbar for retro theme */
+    .right-panel::-webkit-scrollbar,
+    .game-panel::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .right-panel::-webkit-scrollbar-track,
+    .game-panel::-webkit-scrollbar-track {
+      background: #000011;
+      border: 1px solid #00ff41;
+    }
+    
+    .right-panel::-webkit-scrollbar-thumb,
+    .game-panel::-webkit-scrollbar-thumb {
+      background: #00ff41;
+    }
+    
+    .right-panel::-webkit-scrollbar-thumb:hover,
+    .game-panel::-webkit-scrollbar-thumb:hover {
+      background: #00cc33;
     }
   </style>
 </head>
 <body onload="restoreGameStatus()">
 
-  <h1>🧠 MTC Maze Challenge</h1>
 
-  <div class="progress-tracker" aria-label="Progress Bar">
-    <div class="progress-fill" id="progress-fill"></div>
-  </div>
 
   <div class="container">
 
     <div class="maze-section">
+      <h1>MTC Maze Challenge</h1>
       <canvas id="maze" width="600" height="600"></canvas>
-      <!-- <div class="solve-btn-wrapper">
+      <!-- <div class="solve-btn-wrapper" style="background-color: white;">
         <button onclick="initSolve()">Solve Maze</button>
       </div> -->
+      <div class="generate-btn-wrapper">
+        <button class="generate-btn" onclick="generateMaze()">Generate Maze</button>
+      </div>
     </div>
 
     <div class="right-panel">
       <div id="timer">Time: 0s</div>
-
-      <div class="generate-btn-wrapper">
-        <button class="generate-btn" onclick="initMaze()">Generate Maze</button>
+      <h3>Progress Bar</h3>
+      <div class="progress-tracker" aria-label="Progress Bar">
+        <div class="progress-fill" id="progress-fill"></div>
       </div>
-
+      <h3>🎮 Mini Games</h3>
       <div class="game-panel" aria-label="Mini Games">
-        <h3>🎮 Mini Games</h3>
-        <div><span id="card-tick" class="tick hidden">✅</span><button onclick="launchGame('card')">Play Card Matching</button></div>
-        <div><span id="bullseye-tick" class="tick hidden">✅</span><button onclick="launchGame('bullseye')">Play Bullseye</button></div>
-        <div><span id="mole-tick" class="tick hidden">✅</span><button onclick="launchGame('mole')">Play Whack-a-Mole</button></div>
-        <div><span id="flappy-tick" class="tick hidden">✅</span><button onclick="launchGame('flappy')">Play Flappy Bird</button></div>
-        <div><span id="memory-tick" class="tick hidden">✅</span><button onclick="launchGame('memory')">Play Memory Sequence</button></div>
-        <button onclick="localStorage.clear(); location.reload();" class="reset-btn">🔄 Reset Progress</button>
+        <div class="game-item">
+          <button id="card-btn" onclick="launchGame('card')" disabled>❓ ???</button>
+        </div>
+        <div class="game-item">
+          <button id="bullseye-btn" onclick="launchGame('bullseye')" disabled>❓ ???</button>
+        </div>
+        <div class="game-item">
+          <button id="mole-btn" onclick="launchGame('mole')" disabled>❓ ???</button>
+        </div>
+        <div class="game-item">
+          <button id="flappy-btn" onclick="launchGame('flappy')" disabled>❓ ???</button>
+        </div>
+        <div class="game-item">
+          <button id="memory-btn" onclick="launchGame('memory')" disabled>❓ ???</button>
+        </div>
+        <div class="game-item">
+          <button onclick="localStorage.clear(); location.reload();" class="reset-btn">🔄 Reset Progress</button>
+        </div>
       </div>
+
+
     </div>
 
   </div>
 
   <!-- Game Modal -->
   <div id="game-modal" class="hidden">
+    <div class="game-controls">
+      <button id="exit-game-btn" onclick="exitGame()">ESC - EXIT GAME</button>
+    </div>
     <iframe id="game-frame" src="" frameborder="0" scrolling="no"></iframe>
   </div>
 
@@ -366,7 +748,14 @@
     <div class="popup-content">
       <h2>🎉 Congratulations!</h2>
       <p>You completed the maze in <span id="time-taken">0</span> seconds!</p>
-      <button onclick="onWinPopupClose()">OK</button>
+      
+      <div class="id-input-section">
+        <label for="student-id">Enter your 13-character Student ID:</label>
+        <input type="text" id="student-id" maxlength="13" placeholder="Enter 13-char ID" />
+        <div id="id-error" class="error-message hidden">Please enter BITS ID</div>
+      </div>
+      
+      <button onclick="submitScore()">Submit & Continue</button>
     </div>
   </div>
 

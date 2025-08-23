@@ -1,0 +1,9 @@
+Please add the following retro-style game images in this folder:
+
+1. card-matching.png - A retro-style image showing matching cards
+2. bullseye.png - A retro-style target/bullseye image
+3. whack-a-mole.png - A retro-style whack-a-mole game scene
+4. flappy-bird.png - A retro-style flappy bird game scene
+5. memory-sequence.png - A retro-style memory sequence game image
+
+Each image should be 320x180 pixels in size and follow a retro pixel art style with bright neon colors on dark backgrounds to match the theme.

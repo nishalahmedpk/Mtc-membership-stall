@@ -1,0 +1,265 @@
+/* Retro Gaming Theme */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive;
+}
+
+html, body {
+    height: 100%;
+    background: #000;
+    color: #00ff00;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(45deg, #000000 25%, #0a0a0a 25%),
+                linear-gradient(-45deg, #000000 25%, #0a0a0a 25%),
+                linear-gradient(45deg, #0a0a0a 75%, #000000 75%),
+                linear-gradient(-45deg, #0a0a0a 75%, #000000 75%);
+    background-size: 20px 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.progress-tracker {
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 1.5rem;
+    border: 2px solid #00ff00;
+    border-radius: 0;
+    background: #000;
+    height: 24px;
+    overflow: hidden;
+    box-shadow: 0 0 15px #00ff00;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #00ff00;
+    width: 0%;
+    transition: width 0.3s ease-in-out;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    gap: 2rem;
+    flex: 1;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 0;
+}
+
+.maze-section {
+    flex: 1 1 650px;
+    background: #000;
+    border: 4px solid #00ff00;
+    padding: 1rem;
+    box-shadow: 0 0 20px #00ff00;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px #00ff00;
+    }
+    to {
+        box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+    }
+}
+
+#maze {
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 1 / 1;
+    border: 2px solid #00ff00;
+    margin-top: 0.8rem;
+    background: #000;
+    box-shadow: inset 0 0 20px #00ff00;
+}
+
+.right-panel {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#timer {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    padding: 0.8rem 1.2rem;
+    text-align: center;
+    background: #000;
+    box-shadow: 0 0 15px #00ff00;
+    text-transform: uppercase;
+}
+
+.game-panel {
+    background: #000;
+    border: 4px solid #00ff00;
+    padding: 1rem;
+    box-shadow: 0 0 20px #00ff00;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: glow 2s infinite alternate;
+}
+
+.game-panel h3 {
+    color: #00ff00;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.game-card {
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00ff00;
+}
+
+.game-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid #00ff00;
+}
+
+.game-card .title {
+    text-align: center;
+    padding: 0.5rem 0;
+    font-size: 0.7rem;
+    color: #00ff00;
+}
+
+.tick {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #000;
+    color: #00ff00;
+    padding: 0.2rem;
+    border: 1px solid #00ff00;
+    font-size: 0.8rem;
+}
+
+.generate-btn, .solve-btn-wrapper button {
+    background: #000;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    padding: 0.8rem 1.6rem;
+    font-weight: normal;
+    cursor: pointer;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.generate-btn:hover, .solve-btn-wrapper button:hover {
+    background: #00ff00;
+    color: #000;
+    box-shadow: 0 0 15px #00ff00;
+}
+
+.reset-btn {
+    background: #ff0000 !important;
+    color: #000 !important;
+    border: 2px solid #ff0000 !important;
+    box-shadow: 0 0 12px #ff0000;
+}
+
+.reset-btn:hover {
+    background: #000 !important;
+    color: #ff0000 !important;
+    box-shadow: 0 0 20px #ff0000;
+}
+
+.crt-lines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 50%,
+        rgba(0, 0, 0, 0.2) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Popups */
+#game-modal, #unlock-popup, #win-popup, #fail-popup {
+    font-family: 'Press Start 2P', cursive;
+}
+
+.popup {
+    background: rgba(0,0,0,0.9);
+}
+
+.popup .popup-content {
+    background: #000;
+    border: 4px solid #00ff00;
+    color: #00ff00;
+    box-shadow: 0 0 20px #00ff00;
+    animation: glow 2s infinite alternate;
+}
+
+/* Responsive Design */
+@media (max-width: 950px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .maze-section {
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 1rem;
+    }
+    
+    .right-panel {
+        width: 100%;
+        max-width: 600px;
+    }
+    
+    #maze {
+        max-width: 100%;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+}

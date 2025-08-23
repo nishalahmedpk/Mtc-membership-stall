@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTC Maze Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(45deg, #000000 25%, transparent 25%),
+                        linear-gradient(-45deg, #000000 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #000000 75%),
+                        linear-gradient(-45deg, transparent 75%, #000000 75%);
+            background-size: 20px 20px;
+            background-color: #111;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #00ff00;
+            animation: glow 2s infinite alternate;
+        }
+
+        h1 {
+            color: #00ff00;
+            font-size: 2.5em;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .input-container {
+            margin: 2rem 0;
+        }
+
+        input {
+            background: #000;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 1rem;
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            width: 300px;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-family: 'Press Start 2P', cursive;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #00cc00;
+            transform: scale(1.05);
+        }
+
+        .instructions {
+            display: none;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid #00ff00;
+            max-width: 500px;
+            text-align: left;
+            font-size: 0.8em;
+            line-height: 1.5;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px #00ff00;
+            }
+            to {
+                box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+            }
+        }
+
+        .crt-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0) 50%,
+                rgba(0, 0, 0, 0.2) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        .error-message {
+            color: #ff0000;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="crt-lines"></div>
+    <div class="container">
+        <h1>MTC MAZE CHALLENGE</h1>
+        <div class="input-container">
+            <input type="text" id="universityId" placeholder="ENTER UNIVERSITY ID" maxlength="10">
+            <div class="error-message" id="errorMessage">INVALID ID FORMAT!</div>
+        </div>
+        <button onclick="startGame()">START GAME</button>
+        <button onclick="toggleInstructions()">INSTRUCTIONS</button>
+        <div class="instructions" id="instructions">
+            <p>HOW TO PLAY:</p>
+            <br>
+            1. ENTER YOUR UNIVERSITY ID TO BEGIN
+            <br>
+            2. COMPLETE ALL 5 MINI-GAMES TO UNLOCK THE MAZE
+            <br>
+            3. NAVIGATE THE MAZE USING ARROW KEYS
+            <br>
+            4. COMPLETE THE MAZE WITHIN 70 SECONDS
+            <br>
+            5. COLLECT POWER-UPS TO HELP YOU
+            <br>
+            GOOD LUCK, PLAYER!
+        </div>
+    </div>
+
+    <script>
+        function toggleInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.style.display = instructions.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function startGame() {
+            const universityId = document.getElementById('universityId').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Basic validation for university ID (you can modify this as needed)
+            const idPattern = /^\d{7,10}$/;
+            
+            if (idPattern.test(universityId)) {
+                localStorage.setItem('universityId', universityId);
+                window.location.href = 'index.html';
+            } else {
+                localStorage.setItem('universityId', universityId);
+                window.location.href = 'index.html';
+                
+                errorMessage.style.display = 'block';
+                errorMessage.style.animation = 'none';
+                void errorMessage.offsetWidth; // Trigger reflow
+                errorMessage.style.animation = 'glow 2s infinite alternate';
+            }
+        }
+    </script>
+</body>
+</html>

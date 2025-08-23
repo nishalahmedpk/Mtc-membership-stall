@@ -1,3 +1,9 @@
+// ===== Supabase Configuration =====
+const SUPABASE_URL = 'https://ufdcgppdlcqyjjyskkbj.supabase.co'; // Replace with your Supabase URL
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmZGNncHBkbGNxeWpqeXNra2JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5MzQyMTMsImV4cCI6MjA3MTUxMDIxM30.aaWBE-I52WSQLe-6X5GqG8XOp7ow4jncmVR62G8tHtM'; // Replace with your Supabase anon key
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // ===== Game List =====
 const allGames = [
   { id: 'bullseye', label: 'Play Bullseye', path: '/bullseye/index.html', doneKey: 'bullseyeDone' },
@@ -40,37 +46,95 @@ function loadSelectedGames() {
 // ===== Render Mini-Game Buttons =====
 function renderGamePanel() {
   const panel = document.querySelector(".game-panel");
-  const buttonsHtml = selectedGames.map(game => `
-    <div>
-      <span id="${game.id}-tick" class="tick hidden">✅</span>
-      <button onclick="launchGame('${game.id}')">${game.label}</button>
-    </div>
-  `).join("");
+  
+  // Check if maze has been generated
+  const mazeGenerated = localStorage.getItem('mazeGenerated') === 'true';
+  
+  const buttonsHtml = selectedGames.map(game => {
+    const isCompleted = localStorage.getItem(game.doneKey) === "true";
+    const disabled = !mazeGenerated ? 'disabled' : '';
+    const buttonText = !mazeGenerated ? '❓ ???' : 
+                     isCompleted ? `✅ ${game.label}` : game.label;
+    
+    return `
+      <div class="game-item">
+        <button id="${game.id}-btn" onclick="launchGame('${game.id}')" ${disabled}>${buttonText}</button>
+      </div>
+    `;
+  }).join("");
 
-  panel.innerHTML = `<h3>🎮 Mini Games</h3>${buttonsHtml}
-    <button onclick="resetProgress()" class="reset-btn">🔄 Reset Progress</button>`;
+  panel.innerHTML = `${buttonsHtml}
+    <div class="game-item">
+      <button onclick="localStorage.clear(); location.reload();" class="reset-btn">🔄 Reset Progress</button>
+    </div>`;
 }
 
 function resetProgress() {
-  // Remove done flags for all games
+  // Remove done flags for all games and maze generated flag
   localStorage.clear();
   pickRandomGames();
-  location.reload()
-
+  location.reload();
 }
 
+// ===== Generate Maze Wrapper =====
+function generateMaze() {
+  // Check if maze is already generated
+  if (localStorage.getItem('mazeGenerated') === 'true') {
+    alert('Maze has already been generated!');
+    return;
+  }
+  
+  // Call the original initMaze function
+  if (typeof initMaze === 'function') {
+    initMaze();
+  }
+}
 
 // ===== Launch Game =====
 function launchGame(gameId) {
   console.log("Launching game:", gameId);
-  const frame = document.getElementById("game-frame");
+  
+  // Check if maze has been generated
+  if (localStorage.getItem('mazeGenerated') !== 'true') {
+    alert('Please generate the maze first!');
+    return;
+  }
+  
+  // Check if game is already completed
   const game = selectedGames.find(g => g.id === gameId);
   if (!game) return;
-
+  
+  if (localStorage.getItem(game.doneKey) === "true") {
+    alert('You have already completed this game!');
+    return;
+  }
+  
+  const frame = document.getElementById("game-frame");
   frame.src = game.path;
   frame.style.display = "block";
   document.getElementById("game-modal").classList.remove("hidden");
 }
+
+// ===== Exit Game =====
+function exitGame() {
+  const modal = document.getElementById("game-modal");
+  const iframe = document.getElementById("game-frame");
+  
+  modal.classList.add("hidden");
+  iframe.src = "";
+  iframe.style.display = "none";
+}
+
+// ===== Keyboard Controls =====
+document.addEventListener("keydown", function(event) {
+  // ESC key to exit game
+  if (event.key === "Escape" || event.keyCode === 27) {
+    const modal = document.getElementById("game-modal");
+    if (!modal.classList.contains("hidden")) {
+      exitGame();
+    }
+  }
+});
 
 // ===== Listen for Game Completion =====
 window.addEventListener("message", function (event) {
@@ -98,17 +162,31 @@ window.addEventListener("message", function (event) {
 });
 
 // ===== Update Progress UI =====
-function updateTicks() {
+function updateButtonStates() {
+  const mazeGenerated = localStorage.getItem('mazeGenerated') === 'true';
+  
   selectedGames.forEach(game => {
-    if (localStorage.getItem(game.doneKey) === "true") {
-      document.getElementById(`${game.id}-tick`).classList.remove("hidden");
-    }else {
-      document.getElementById(`${game.id}-tick`).classList.add("hidden");
+    const button = document.getElementById(`${game.id}-btn`);
+    if (!button) return;
+    
+    const isCompleted = localStorage.getItem(game.doneKey) === "true";
+    
+    if (!mazeGenerated) {
+      button.disabled = true;
+      button.textContent = '❓ ???';
+    } else {
+      button.disabled = isCompleted;
+      button.textContent = isCompleted ? `✅ ${game.label}` : game.label;
     }
   });
 
   const completedCount = selectedGames.filter(g => localStorage.getItem(g.doneKey) === "true").length;
   updateProgressBar(completedCount);
+}
+
+// Keep updateTicks for backward compatibility but redirect to new function
+function updateTicks() {
+  updateButtonStates();
 }
 
 function updateProgressBar(completed) {
@@ -120,8 +198,35 @@ function updateProgressBar(completed) {
 
 // ===== Restore Status =====
 function restoreGameStatus() {
-  updateTicks();
+  updateButtonStates();
   checkAllGames();
+}
+
+// ===== Enable Games After Maze Generation =====
+function enableGamesAfterMazeGeneration() {
+  localStorage.setItem('mazeGenerated', 'true');
+  updateButtonStates();
+  updateGenerateButtonState();
+}
+
+// ===== Update Generate Button State =====
+function updateGenerateButtonState() {
+  const generateBtn = document.querySelector('.generate-btn');
+  const mazeGenerated = localStorage.getItem('mazeGenerated') === 'true';
+  
+  if (generateBtn) {
+    if (mazeGenerated) {
+      generateBtn.disabled = true;
+      generateBtn.textContent = '✅ Maze Generated';
+      generateBtn.style.opacity = '0.5';
+      generateBtn.style.cursor = 'not-allowed';
+    } else {
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Generate Maze';
+      generateBtn.style.opacity = '1';
+      generateBtn.style.cursor = 'pointer';
+    }
+  }
 }
 
 // ===== Check If All Selected Games Done =====
@@ -143,7 +248,8 @@ function closeUnlockPopup() {
 window.onload = function () {
   loadSelectedGames();
   renderGamePanel();
-  updateTicks();
+  updateButtonStates(); // Use the new function instead of updateTicks
+  updateGenerateButtonState(); // Set initial generate button state
   checkAllGames();
 };
 
@@ -155,3 +261,57 @@ window.addEventListener("resize", () => {
   iframe.style.width = Math.min(parseInt(iframe.style.width), maxWidth) + "px";
   iframe.style.height = Math.min(parseInt(iframe.style.height), maxHeight) + "px";
 });
+
+// ===== Score Submission to Supabase =====
+async function submitScore() {
+  const studentId = document.getElementById('student-id').value.trim();
+  const timeTakenElement = document.getElementById('time-taken');
+  const timeTakenMs = parseInt(timeTakenElement.dataset.milliseconds); // Get milliseconds from data attribute
+  const errorDiv = document.getElementById('id-error');
+  
+  // Validate 13-character ID
+  if (studentId.length !== 13) {
+    errorDiv.classList.remove('hidden');
+    return;
+  }
+  
+  errorDiv.classList.add('hidden');
+  
+  try {
+    // Get current timestamp with milliseconds
+    const timestamp = new Date().toISOString();
+    
+    // Insert data into Supabase
+    const { data, error } = await supabase
+      .from('maze_completions') // Replace 'maze_completions' with your table name
+      .insert([
+        {
+          student_id: studentId,
+          completion_time: timeTakenMs, // Store time in milliseconds
+          timestamp: timestamp
+        }
+      ]);
+
+    if (error) {
+      console.error('Error submitting score:', error);
+      alert('Error submitting score. Please try again.');
+      return;
+    }
+
+    console.log('Score submitted successfully:', data);
+    
+    // Close popup and reset
+    onWinPopupClose();
+    
+  } catch (error) {
+    console.error('Network error:', error);
+    alert('Network error. Please check your connection and try again.');
+  }
+}
+
+// ===== Modified Win Popup Close Function =====
+function onWinPopupClose() {
+  document.getElementById("win-popup").style.display = "none";
+  localStorage.clear();
+  location.reload();
+}
