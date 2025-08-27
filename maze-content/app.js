@@ -62,7 +62,7 @@ function initMaze() {
     if (timerEl) timerEl.textContent = `Time: ${elapsedSeconds}s`;
 
     // Fail if more than 70 seconds
-    if (elapsedMs >= 70000) { // 70 seconds in milliseconds
+    if (elapsedMs >= 90000) { // 70 seconds in milliseconds
       clearInterval(timerInterval);
       showFailPopup();
     }
